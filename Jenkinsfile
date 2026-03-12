@@ -4,7 +4,7 @@ agent any
 
 environment {
 
-DOCKER_USER="YOUR_DOCKERHUB"
+DOCKER_USER="sonali10"
 
 }
 
@@ -14,7 +14,7 @@ stage('Clone Repo'){
 
 steps{
 
-git 'https://github.com/YOUR_REPO.git'
+git 'https://github.com/SonaliMB/DevOpsDemo.git'
 
 }
 

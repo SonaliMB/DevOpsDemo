@@ -1,28 +1,49 @@
 pipeline {
-
 agent any
+
+ 
 
 environment {
 
-DOCKER_USER="sonali10"
+    DOCKER_USER = "sonali10"
 
 }
+
+ 
 
 stages {
 
-stage('Clone Repo'){
+ 
 
-steps{
+stage('Checkout') {
 
-git branch: 'main', url: 'https://github.com/SonaliMB/DevOpsDemo.git'
+steps {
+
+checkout scm
 
 }
 
 }
 
-stage('Build Backend'){
+ 
 
-steps{
+stage('Verify Repo') {
+
+steps {
+
+sh 'echo Repository cloned successfully'
+
+sh 'ls -la'
+
+}
+
+}
+
+ 
+
+stage('Build Backend') {
+
+steps {
 
 sh 'docker build -t $DOCKER_USER/backend:latest ./backend'
 
@@ -30,9 +51,11 @@ sh 'docker build -t $DOCKER_USER/backend:latest ./backend'
 
 }
 
-stage('Build Frontend'){
+ 
 
-steps{
+stage('Build Frontend') {
+
+steps {
 
 sh 'docker build -t $DOCKER_USER/frontend:latest ./frontend'
 
@@ -40,11 +63,13 @@ sh 'docker build -t $DOCKER_USER/frontend:latest ./frontend'
 
 }
 
-stage('Docker Login'){
+ 
 
-steps{
+stage('Docker Login') {
 
-withCredentials([usernamePassword(credentialsId:'dockerhub',usernameVariable:'USER',passwordVariable:'PASS')]){
+steps {
+
+withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
 
 sh 'echo $PASS | docker login -u $USER --password-stdin'
 
@@ -54,9 +79,11 @@ sh 'echo $PASS | docker login -u $USER --password-stdin'
 
 }
 
-stage('Push Images'){
+ 
 
-steps{
+stage('Push Images') {
+
+steps {
 
 sh 'docker push $DOCKER_USER/backend:latest'
 
@@ -66,9 +93,11 @@ sh 'docker push $DOCKER_USER/frontend:latest'
 
 }
 
-stage('Deploy to Kubernetes'){
+ 
 
-steps{
+stage('Deploy to Kubernetes') {
+
+steps {
 
 sh 'kubectl apply -f k8s/'
 
@@ -76,16 +105,24 @@ sh 'kubectl apply -f k8s/'
 
 }
 
-stage('Verify'){
+ 
 
-steps{
+stage('Verify Deployment') {
+
+steps {
 
 sh 'kubectl get pods'
 
-}
+sh 'kubectl get svc'
 
 }
 
 }
+
+ 
+
+}
+
+ 
 
 }

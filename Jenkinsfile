@@ -50,8 +50,8 @@ stage('Deploy to Kubernetes') {
 steps {
 sh '''
 export KUBECONFIG=/home/jenkins/.kube/config
-kubectl get nodes
-kubectl apply -f k8s/
+kubectl --server=https://host.docker.internal:49933 --insecure-skip-tls-verify get nodes
+kubectl apply -f k8s/ --server=https://host.docker.internal:49933 --insecure-skip-tls-verify
 '''
 }
 }

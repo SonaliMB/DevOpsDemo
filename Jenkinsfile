@@ -49,7 +49,7 @@ sh 'docker push $DOCKER_USER/frontend:latest'
 stage('Deploy to Kubernetes') {
 steps {
 sh '''
-export KUBECONFIG=/var/jenkins_home/.kube/config
+export KUBECONFIG=/home/jenkins/.kube/config
 kubectl get nodes
 kubectl apply -f k8s/
 '''
@@ -59,7 +59,7 @@ kubectl apply -f k8s/
 stage('Verify Deployment') {
 steps {
 sh '''
-export KUBECONFIG=/var/jenkins_home/.kube/config
+export KUBECONFIG=/home/jenkins/.kube/config
 kubectl get pods
 kubectl get svc
 '''

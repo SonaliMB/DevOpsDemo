@@ -48,14 +48,21 @@ sh 'docker push $DOCKER_USER/frontend:latest'
 
 stage('Deploy to Kubernetes') {
 steps {
-sh 'kubectl apply -f k8s/'
+sh '''
+export KUBECONFIG=/var/jenkins_home/.kube/config
+kubectl get nodes
+kubectl apply -f k8s/
+'''
 }
 }
 
 stage('Verify Deployment') {
 steps {
-sh 'kubectl get pods'
-sh 'kubectl get svc'
+sh '''
+export KUBECONFIG=/var/jenkins_home/.kube/config
+kubectl get pods
+kubectl get svc
+'''
 }
 }
 }
